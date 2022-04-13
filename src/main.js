@@ -1,10 +1,32 @@
-import Vue from "vue";
+import Vue from 'vue';
+import Router from 'vue-router';
 import App from "./App.vue";
 import store from "./store";
+import "./plugins/bootstrap";
 
 Vue.config.productionTip = false;
+const routerPush = Router.prototype.push;
+
+Router.prototype.push = function push (location) {
+  return routerPush.call(this, location).catch(error => error);
+};
+
+Vue.use(Router);
+
+const router = new Router({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes: [
+    {
+      path: '/',
+      name: 'root',
+      component: App
+    }
+  ]
+});
 
 new Vue({
+  router,
   store,
   render: (h) => h(App),
 }).$mount("#app");
